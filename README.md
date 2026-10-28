@@ -1,4 +1,15 @@
-# Quiz-github-A11.2023.15368
-#Nama : Muhammad Rheno Nabil Farohi
-#Nim : A11.2023.15368
-#Kelas : Dev-04 Kamis 12.30 H7.1
+# quiz-github--A11.2023.15427-
+
+# Quiz GitHub
+
+## Identitas
+
+**Nama:** Rafli Kurnia 
+**NIM:** A11.2023.15427  
+**Kelas:** Dev-04  
+**Mata Kuliah:** Bengkel Koding 
+
+## Deskripsi
+
+Repository ini dibuat untuk memenuhi tugas praktik GitHub.
+Repository berisi informasi dan hasil pengerjaan quiz GitHub.
