@@ -13,13 +13,13 @@ class DokterController extends Controller
     public function index()
     {
         $dokters = User::where('role', 'dokter')->with('poli')->get();
-        return view('dokter.index', compact('dokters'));
+        return view('admin.dokter.index', compact('dokters'));
     }
 
     public function create()
     {
         $polis = Poli::all();
-        return view('dokter.create', compact('polis'));
+        return view('admin.dokter.create', compact('polis'));
     }
 
     public function store(Request $request)
@@ -46,14 +46,13 @@ class DokterController extends Controller
         ]);
 
         return redirect()->route('dokter.index')
-            ->with('message', 'Data Dokter Berhasil di tambahkan')
-            ->with('type', 'success');
+            ->with('success', 'Data dokter berhasil ditambahkan.');
     }
 
     public function edit(User $dokter)
     {
         $polis = Poli::all();
-        return view('dokter.edit', compact('dokter', 'polis'));
+        return view('admin.dokter.edit', compact('dokter', 'polis'));
     }
 
     public function update(Request $request, User $dokter)
@@ -84,8 +83,7 @@ class DokterController extends Controller
         $dokter->update($updateData);
 
         return redirect()->route('dokter.index')
-            ->with('message', 'Data Dokter Berhasil di ubah')
-            ->with('type', 'success');
+            ->with('success', 'Data dokter berhasil diperbarui.');
     }
 
     public function destroy(User $dokter)
@@ -93,7 +91,6 @@ class DokterController extends Controller
         $dokter->delete();
 
         return redirect()->route('dokter.index')
-            ->with('message', 'Data Dokter Berhasil dihapus')
-            ->with('type', 'success');
+            ->with('success', 'Data dokter berhasil dihapus.');
     }
 }

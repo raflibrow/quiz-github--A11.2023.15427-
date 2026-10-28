@@ -11,12 +11,12 @@ class AdminPoliController extends Controller
     public function index()
     {
         $polis = Poli::all();
-        return view('poli.index', compact('polis'));
+        return view('admin.poli.index', compact('polis'));
     }
 
     public function create()
     {
-        return view('poli.create');
+        return view('admin.poli.create');
     }
 
     public function store(Request $request)
@@ -27,13 +27,13 @@ class AdminPoliController extends Controller
         ]);
 
         Poli::create($validated);
-        return redirect()->route('polis.index')->with('success', 'Poli berhasil di tambahkan')->with('type', 'success');
+        return redirect()->route('polis.index')->with('success', 'Poli berhasil ditambahkan.');
     }
 
     public function edit(string $id)
     {
         $poli = Poli::findOrFail($id);
-        return view('poli.edit', compact('poli'));
+        return view('admin.poli.edit', compact('poli'));
     }
 
     public function update(Request $request, string $id)
@@ -45,13 +45,13 @@ class AdminPoliController extends Controller
 
         $poli = Poli::findOrFail($id);
         $poli->update($validated);
-        return redirect()->route('polis.index')->with('success', 'Polis berhasil di update');
+        return redirect()->route('polis.index')->with('success', 'Poli berhasil diperbarui.');
     }
 
     public function destroy(string $id)
     {
         $poli = Poli::findOrFail($id);
         $poli->delete();
-        return redirect()->route('polis.index')->with('success', 'Polis Berhasil di hapus !');
+        return redirect()->route('polis.index')->with('success', 'Poli berhasil dihapus.');
     }
 }

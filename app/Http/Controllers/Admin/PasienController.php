@@ -12,12 +12,12 @@ class PasienController extends Controller
     public function index()
     {
         $pasiens = User::where('role', 'pasien')->with('poli')->get();
-        return view('pasien.index', compact('pasiens'));
+        return view('admin.pasien.index', compact('pasiens'));
     }
 
     public function create()
     {
-        return view('pasien.create');
+        return view('admin.pasien.create');
     }
 
     public function store(Request $request)
@@ -31,7 +31,7 @@ class PasienController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        User::create([
+        $pasien = User::create([
             'nama' => $request->nama,
             'alamat' => $request->alamat,
             'no_ktp' => $request->no_ktp,
@@ -40,13 +40,14 @@ class PasienController extends Controller
             'password' => Hash::make($request->password),
             'role' => 'pasien',
         ]);
+        $pasien->ensureNoRm();
 
-        return redirect()->route('pasien.index')->with('message', 'Data Pasien berhasil di Tambah>')->with('type', 'success');
+        return redirect()->route('pasien.index')->with('success', 'Data pasien berhasil ditambahkan.');
     }
 
     public function edit(User $pasien)
     {
-        return view('pasien.edit', compact('pasien'));
+        return view('admin.pasien.edit', compact('pasien'));
     }
 
     public function update(Request $request, User $pasien)
@@ -76,8 +77,7 @@ class PasienController extends Controller
 
         return redirect()
             ->route('pasien.index')
-            ->with('message', 'Data Pasien berhasil di Ubah>')
-            ->with('type', 'success');
+            ->with('success', 'Data pasien berhasil diperbarui.');
     }
 
     public function destroy(User $pasien)
@@ -85,7 +85,6 @@ class PasienController extends Controller
         $pasien->delete();
         return redirect()
             ->route('pasien.index')
-            ->with('message', 'Data Pasien berhasil dihapus')
-            ->with('type', 'success');
+            ->with('success', 'Data pasien berhasil dihapus.');
     }
 }

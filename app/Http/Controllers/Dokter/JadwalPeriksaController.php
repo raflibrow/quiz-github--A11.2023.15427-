@@ -26,6 +26,12 @@ class JadwalPeriksaController extends Controller
     {
         $validated = $request->validate($this->validationRules());
 
+        if ($this->hasScheduleConflict($validated)) {
+            return back()
+                ->withErrors(['jam_mulai' => 'Jadwal aktif bertabrakan dengan jadwal lain pada hari yang sama.'])
+                ->withInput();
+        }
+
         JadwalPeriksa::create($validated + [
             'id_dokter' => Auth::id(),
         ]);
@@ -43,9 +49,15 @@ class JadwalPeriksaController extends Controller
 
     public function update(Request $request, string $id)
     {
+        $jadwalPeriksa = $this->jadwalMilikDokter($id);
         $validated = $request->validate($this->validationRules());
 
-        $jadwalPeriksa = $this->jadwalMilikDokter($id);
+        if ($this->hasScheduleConflict($validated, $jadwalPeriksa->id)) {
+            return back()
+                ->withErrors(['jam_mulai' => 'Jadwal aktif bertabrakan dengan jadwal lain pada hari yang sama.'])
+                ->withInput();
+        }
+
         $jadwalPeriksa->update($validated);
 
         return redirect()->route('jadwal-periksa.index')
@@ -69,6 +81,25 @@ class JadwalPeriksaController extends Controller
             'jam_selesai' => ['required', 'date_format:H:i', 'after:jam_mulai'],
             'status' => ['required', Rule::in(['Aktif', 'Nonaktif'])],
         ];
+    }
+
+    private function hasScheduleConflict(array $data, ?int $ignoreId = null): bool
+    {
+        if ($data['status'] !== 'Aktif') {
+            return false;
+        }
+
+        $query = JadwalPeriksa::where('id_dokter', Auth::id())
+            ->where('hari', $data['hari'])
+            ->where('status', 'Aktif')
+            ->where('jam_mulai', '<', $data['jam_selesai'])
+            ->where('jam_selesai', '>', $data['jam_mulai']);
+
+        if ($ignoreId !== null) {
+            $query->whereKeyNot($ignoreId);
+        }
+
+        return $query->exists();
     }
 
     private function jadwalMilikDokter(string $id): JadwalPeriksa

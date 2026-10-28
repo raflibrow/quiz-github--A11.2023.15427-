@@ -57,4 +57,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(JadwalPeriksa::class, 'id_dokter');
     }
+
+    public function ensureNoRm(): void
+    {
+        if (filled($this->no_rm)) {
+            return;
+        }
+
+        $this->forceFill([
+            'no_rm' => now()->format('Ym') . '-' . str_pad((string) $this->id, 3, '0', STR_PAD_LEFT),
+        ])->save();
+    }
 }
